@@ -12,7 +12,6 @@ def homepage():
     return render_template('home/index.html', title="Welcome")
 
 @home.route('/dashboard')
-@login_required
 def dashboard():
     """
     Render the dashboard template on the /dashboard route
@@ -20,7 +19,6 @@ def dashboard():
     return render_template('home/dashboard.html', title="Dashboard")
 
 @home.route('/admin/dashboard')
-@login_required
 def admin_dashboard():
     # prevent non-admins from accessing the page
     if not current_user.is_admin:
@@ -109,5 +107,3 @@ def getTable(ideas):
             'msg': 'unable to retrieve ideas'
         }
         return jsonify(error)
-
-

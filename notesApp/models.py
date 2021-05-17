@@ -4,103 +4,76 @@
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from notesApp import db, login_manager
+from notesApp import db #, login_manager
 
-class User(UserMixin, db.Model):
+
+class Note(db.Model):
+
+    __tablename__ = 'products'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80))
+    manufacturer_id = db.Column(db.Integer, db.ForeignKey('manufacturers.id'), nullable=True)
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return '<Product: {0}\n{1}>'.format(self.name)
+
+class Contract(db.Model):
+
+    __tablename__ = 'contracts'
+
+    id = db.Column(db.Integer, primary_key=True)
+    card_info = db.Column(db.Integer)
+    bill_number = db.Column(db.Integer, db.ForeignKey('bills.id'), nullable=True)
+
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return '<Product: {0}\n{1}>'.format(self.name)
+
+
+class Customer(UserMixin, db.Model):
     """
     Create an Employee table
     """
 
     # Ensures table will be named in plural and not in singular
     # as is the name of the model
-    __tablename__ = 'users'
+    __tablename__ = 'customers'
 
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(60), index=True, unique=True)
-    username = db.Column(db.String(60), index=True, unique=True)
-    first_name = db.Column(db.String(60), index=True)
-    last_name = db.Column(db.String(60), index=True)
-    password_hash = db.Column(db.String(128))
-    subject_id = db.Column(db.Integer, db.ForeignKey('careers.id'))
-    subject = db.relationship('Career', backref='career')
+    name = db.Column(db.String(60), index=True, unique=True)
+    type = db.Column(db.String(60))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    is_admin = db.Column(db.Boolean, default=False)
-    notes = db.relationship('Note', lazy='select', backref=db.backref('user', lazy='joined'))
+
 
     def __repr__(self):
-        return '<Career Field: {}>'.format(self.name)
-    @property
-    def password(self):
-        """
-        Prevent pasword from being accessed
-        """
-        raise AttributeError('password is not a readable attribute.')
-
-    @password.setter
-    def password(self, password):
-        """
-        Set password to a hashed password
-        """
-        self.password_hash = generate_password_hash(password)
-
-    def verify_password(self, password):
-        """
-        Check if hashed password matches actual password
-        """
-        return check_password_hash(self.password_hash, password)
-
-    def __repr__(self):
-        return '<Name: {}>'.format(self.username)
+        return '<Customer name is: {}>'.format(self.name)
 
 
-    def serialize(self):
-        """Return object data in easily serializeable format"""
-        return {
-            'User ID' : self.id,
-            'Email':  self.email,
-            'Username': self.username,
-            'First Name': self.first_name,
-            'Last Name' : self.last_name,
-            'CareerField': self.career.name,
-            'Role': self.role.name
-            }
+class Delivery(db.Model):
 
-def dump_datetime(value):
-        """Deserialize datetime object into string form for JSON processing."""
-        if value is None:
-            return None
-        return [value.strftime("%Y-%m-%d"), value.strftime("%H:%M:%S")]
-
-
-# Set up user_loader
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
-class Career(db.Model):
-    """
-    Create a Department table
-    """
-
-    __tablename__ = 'careers'
+    __tablename__ = 'deliveries'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(60), unique=True)
-    description = db.Column(db.String(200))
-    users = db.relationship('User', backref='career', lazy='dynamic')
+    name = db.Column(db.String(60), index=True, unique=True)
+    tracking_number = db.Column(db.Integer, primary_key=True)
+
+
+    def __init__(self, name):
+        self.name = name
 
     def __repr__(self):
-        return '<Career Field: {}>'.format(self.name)
+        return '<Delivery company: {0}\n{1}>'.format(self.name)
 
-    def serialize(self):
-        """Return object data in easily serializeable format"""
-        return {
-            'Career ID' : self.id,
-            'name':  self.name,
-            'Description': self.description,
-            'Roles Included': [u.role.name for u in self.users],
-            'Users' : [u.username for u in self.users]
-            }
+
+
+
 
 class Role(db.Model):
     """
@@ -112,41 +85,7 @@ class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), unique=True)
     description = db.Column(db.String(200))
-    users = db.relationship('User', backref='role', lazy='dynamic')
+    users = db.relationship('Customer', backref='role', lazy='dynamic')
 
     def __repr__(self):
         return '<Role: {}>'.format(self.name)
-
-    def serialize(self):
-        """Return object data in easily serializeable format"""
-        return {
-            'Role ID' : self.id,
-            'name':  self.name,
-            'Description': self.description,
-            'Users' : [u.username for u in self.users]
-            }
-
-class Note(db.Model):
-
-    __tablename__ = 'notes'
-
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(80))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
-    body = db.Column(db.Text)
-
-    def __init__(self, title, body):
-        self.title = title
-        self.body = body
-
-    def __repr__(self):
-        return '<Note: {0}\n{1}>'.format(self.title, self.body)
-
-    def serialize(self):
-        """Return object data in easily serializeable format"""
-        return {
-            'Note ID' : self.id,
-            'Title':  self.title,
-            'Description': self.body,
-            'User' : self.user.username
-            }

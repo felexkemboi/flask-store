@@ -31,23 +31,17 @@
           </div>
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    {% if current_user.is_authenticated %}
-                        {% if current_user.is_admin %}
                             <li><a href="{{ url_for('home.admin_dashboard') }}">Dashboard</a></li>
                             <li><a href="{{ url_for('user.viewprofile') }}">View Profile</a></li>
-                            <li><a href="{{ url_for('admin.list_careers') }}">Careers</a></li>
-                            <li><a href="{{ url_for('admin.list_roles') }}">Roles</a></li>
-                            <li><a href="{{ url_for('admin.list_users') }}">Users</a></li>
-                          {% else %}
-                            <li><a href="{{ url_for('home.dashboard') }}">Dashboard</a></li>
-                            <li><a href="{{ url_for('user.viewprofile') }}">View Profile</a></li>
-                            <li><a><i class="fa fa-user"></i>  Hi, {{ current_user.username }}!</a></li>
-                        {% endif %}
-                    {% else %}
-                      <li><a href="{{ url_for('home.homepage') }}">Home</a></li>
-                      <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-                      <li><a href="{{ url_for('auth.login') }}">Login</a></li>
-                    {% endif %}
+                            <li><a href="{{ url_for('user.list_notes') }}">Careers</a></li>
+                            <li><a href="{{ url_for('user.list_notes') }}">Roles</a></li>
+                            <li><a href="{{ url_for('user.list_notes') }}">Users</a></li>
+                            <li><a href="{{ url_for('user.list_notes') }}">Dashboard</a></li>
+                            <li><a href="{{ url_for('user.list_notes') }}">View Profile</a></li>
+                            <li><a><i class="fa fa-user"></i>  Hi, Felex!</a></li>
+                      <li><a href="{{ url_for('user.list_notes') }}">Home</a></li>
+                      <li><a href="{{ url_for('user.list_notes') }}">Register</a></li>
+                      <li><a href="{{ url_for('user.list_notes') }}">Login</a></li>
                 </ul>
           </div>
         </div>
@@ -64,13 +58,10 @@
                     <ul class="list-inline">
                         <li><a href="{{ url_for('home.homepage') }}">Home</a></li>
                         <li class="footer-menu-divider">⋅</li>
-                        {% if current_user.is_authenticated %}
-                          <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
-                        {% else %}
-                          <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+                          <li><a href="{{ url_for('user.list_notes') }}">Logout</a></li>
+                          <li><a href="{{ url_for('user.list_notes') }}">Register</a></li>
                           <li class="footer-menu-divider">⋅</li>
-                          <li><a href="{{ url_for('auth.login') }}">Login</a></li>
-                        {% endif %}
+                          <li><a href="{{ url_for('user.list_notes') }}">Login</a></li>
                     </ul>
                     <p class="copyright text-muted small">Novero Sample Flask App</p>
                 </div>

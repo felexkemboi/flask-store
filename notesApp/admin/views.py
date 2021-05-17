@@ -2,21 +2,21 @@ from flask import abort, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
 
 from . import admin
-from forms import CareerForm, RoleForm, UserAssignForm
+#from forms import CareerForm, RoleForm, UserAssignForm
 from .. import db
-from ..models import Career, Role, User
+from ..models import Customer
 
-def check_admin():
-    """
-    Prevent non-admins from accessing the page
-    """
-    if not current_user.is_admin:
-        abort(403)
+# def check_admin():
+#     """
+#     Prevent non-admins from accessing the page
+#     """
+#     if not current_user.is_admin:
+#         abort(403)
 
 # Career Views
 
 @admin.route('/careers', methods=['GET', 'POST'])
-@login_required
+# @login_required
 def list_careers():
     """
     List all career fields
@@ -28,7 +28,7 @@ def list_careers():
                            careers=careers, title="Career Fields")
 
 @admin.route('/careers/add', methods=['GET', 'POST'])
-@login_required
+# @login_required
 def add_career():
     """
     Add a career field to the database
@@ -51,7 +51,7 @@ def add_career():
             flash('Error: career field already exists.')
 
         # redirect to career field page
-        return redirect(url_for('admin.list_careers'))
+        return redirect(url_for(''))
 
     # load career template
     return render_template('admin/careers/career.html', action="Add",
@@ -59,7 +59,7 @@ def add_career():
                            title="Add a Career Field")
 
 @admin.route('/careers/edit/<int:id>', methods=['GET', 'POST'])
-@login_required
+# @login_required
 def edit_career(id):
     """
     Edit a career field
@@ -77,7 +77,7 @@ def edit_career(id):
         flash('You have successfully edited the career {}.'.format(career.name))
 
         # redirect to the careers page
-        return redirect(url_for('admin.list_careers'))
+        return redirect(url_for(''))
 
     form.description.data = career.description
     form.name.data = career.name
@@ -86,7 +86,6 @@ def edit_career(id):
                            career=career, title="Edit Career Field")
 
 @admin.route('/careers/delete/<int:id>', methods=['GET', 'POST'])
-@login_required
 def delete_career(id):
     """
     Delete a career field from the database
@@ -99,14 +98,14 @@ def delete_career(id):
     flash('You have successfully deleted the career.')
 
     # redirect to the careers page
-    return redirect(url_for('admin.list_careers'))
+    return redirect(url_for(''))
 
     return render_template(title="Delete A Career Field")
 
 # Role Views
 
 @admin.route('/roles')
-@login_required
+# @login_required
 def list_roles():
     check_admin()
     """
@@ -117,7 +116,7 @@ def list_roles():
                            roles=roles, title='Roles')
 
 @admin.route('/roles/add', methods=['GET', 'POST'])
-@login_required
+# @login_required
 def add_role():
     """
     Add a role to the database
@@ -148,7 +147,7 @@ def add_role():
                            form=form, title='Add Role')
 
 @admin.route('/roles/edit/<int:id>', methods=['GET', 'POST'])
-@login_required
+# @login_required
 def edit_role(id):
     """
     Edit a role
@@ -175,7 +174,7 @@ def edit_role(id):
                            form=form, title="Edit Role")
 
 @admin.route('/roles/delete/<int:id>', methods=['GET', 'POST'])
-@login_required
+# @login_required
 def delete_role(id):
     """
     Delete a role from the database
@@ -196,7 +195,7 @@ def delete_role(id):
 # User Views
 
 @admin.route('/users')
-@login_required
+# @login_required
 def list_users():
     """
     List all users
@@ -208,7 +207,7 @@ def list_users():
                            users=users, title='Users')
 
 @admin.route('/users/assign/<int:id>', methods=['GET', 'POST'])
-@login_required
+# @login_required
 def assign_user(id):
     """
     Assign a career field and a role to an user

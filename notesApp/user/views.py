@@ -2,13 +2,12 @@ from flask import flash, redirect, render_template, url_for, request
 from flask_login import login_required, current_user
 
 from . import user
-from forms import UserUpdateForm, NoteForm
+from .forms import NoteForm
 from .. import db
-from ..models import User, Career, Note
+from ..models import Note
 
 
 @user.route('/viewprofile', methods=['GET', 'POST'])
-@login_required
 def viewprofile():
     """
     Handle requests to the /register route
@@ -24,14 +23,11 @@ def viewprofile():
         db.session.commit()
 
         flash('You have successfully edited your profile!')
-    return render_template('user/user.html', title="View Profile",
-                           user=user, form=form, action='Edit')
+    return render_template('user/user.html', title="View Profile", user=user, form=form, action='Edit')
 
 
 @user.route('/notes')
-@login_required
 def list_notes():
-
     """
     List all roles
     """
@@ -45,7 +41,6 @@ def list_notes():
                            notes=notes, title='Notes')
 
 @user.route('/notes/add', methods=['GET', 'POST'])
-@login_required
 def add_note():
     """
     Add a role to the database
@@ -75,7 +70,6 @@ def add_note():
 
 
 @user.route('/notes/edit/<int:id>', methods=['GET', 'POST'])
-@login_required
 def edit_note(id):
     """
     Edit a role
@@ -101,7 +95,6 @@ def edit_note(id):
                            form=form, title="Edit Note")
 
 @user.route('/notes/delete/<int:id>', methods=['GET', 'POST'])
-@login_required
 def delete_note(id):
     """
     Delete a role from the database
