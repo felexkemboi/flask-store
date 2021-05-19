@@ -1,4 +1,4 @@
-![ScreenShot](/screenshots/home.png)
+![ScreenShot](/screenshotshome.homepage.png)
 
 
 # A small flask web app with:

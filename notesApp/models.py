@@ -2,12 +2,11 @@
 #http://docs.sqlalchemy.org/en/latest/core/type_basics.html#generic-types
 
 from flask_login import UserMixin
-from werkzeug.security import generate_password_hash, check_password_hash
 
-from notesApp import db #, login_manager
+from notesApp import db 
 
 
-class Note(db.Model):
+class Product(db.Model):
 
     __tablename__ = 'products'
 
@@ -27,23 +26,30 @@ class Contract(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     card_info = db.Column(db.Integer)
-    bill_number = db.Column(db.Integer, db.ForeignKey('bills.id'), nullable=True)
+    bill_number = db.Column(db.String(60), index=True, unique=True)
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return '<Contract: {0}\n{1}>'.format(self.name)
+
+class Manufacturer(db.Model):
+
+    __tablename__ = 'manufacturers'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Integer)
 
 
     def __init__(self, name):
         self.name = name
 
     def __repr__(self):
-        return '<Product: {0}\n{1}>'.format(self.name)
-
+        return '<Manufacturer: {0}\n{1}>'.format(self.name)
 
 class Customer(UserMixin, db.Model):
-    """
-    Create an Employee table
-    """
 
-    # Ensures table will be named in plural and not in singular
-    # as is the name of the model
     __tablename__ = 'customers'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -72,13 +78,7 @@ class Delivery(db.Model):
         return '<Delivery company: {0}\n{1}>'.format(self.name)
 
 
-
-
-
 class Role(db.Model):
-    """
-    Create a Role table
-    """
 
     __tablename__ = 'roles'
 

@@ -1,14 +1,10 @@
 from flask import abort, render_template, request, jsonify
-from flask_login import current_user, login_required
-
+#from flask_login import current_user, login_required
 from . import home
 from notesApp.models import *
 
 @home.route('/')
 def homepage():
-    """
-    Render the homepage template on the / route
-    """
     return render_template('home/index.html', title="Welcome")
 
 @home.route('/dashboard')
@@ -25,27 +21,6 @@ def admin_dashboard():
         abort(403)
 
     return render_template('home/admin_dashboard.html', title="Dashboard")
-
-
-# @user.route('/interactive/', methods=['GET', 'POST'])
-# def interactive():
-#
-#     return render_template("user/interactive.html")
-#
-# @user.route('/background_process')
-# def background_process():
-#     # cols = getColumns(User)
-#     # UsersList = User.query.all()
-#
-#     try:
-#         lang = request.args.get('proglang', 0, type=str)
-#         if lang.lower() == 'python':
-#
-#             return jsonify(result='You are wise')
-#         else:
-#             return jsonify(result='Try again.')
-#     except Exception as e:
-#         return str(e)
 
 @home.route('/tables')
 def viewtables():

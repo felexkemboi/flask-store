@@ -36,7 +36,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/felex/Desktop/tasks/python/flask-task/venv"
+set -gx VIRTUAL_ENV "home.homepage/felex/Desktop/tasks/python/flask-task/venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
