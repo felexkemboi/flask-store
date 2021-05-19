@@ -3,7 +3,7 @@
 
 from flask_login import UserMixin
 
-from notesApp import db 
+from notesApp import db
 
 
 class Product(db.Model):
@@ -39,7 +39,7 @@ class Manufacturer(db.Model):
     __tablename__ = 'manufacturers'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Integer)
+    name = db.Column(db.String(60))
 
 
     def __init__(self, name):

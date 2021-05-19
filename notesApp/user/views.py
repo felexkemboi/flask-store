@@ -8,25 +8,32 @@ from ..models import Product
 
 
 
-@user.route('/notes')
-def list_notes():
-    return render_template('user/notes.html', user='user', notes=notes, title='Notes')
+@user.route('/products')
+def products():
+
+    products = db.engine.execute("SELECT pr.name 'name', mn.name 'manufacturer' FROM products pr LEFT JOIN manufacturers mn ON pr.manufacturer_id = mn.id")
+    return render_template('user/products.html', products=products)
 
 @user.route('/products/add', methods=['GET', 'POST'])
-def add_note():
-    #user = 'current_user'
+def add_products():
     form = ProductForm()
     if form.validate_on_submit():
-        product = Product(name=form.name.data)
+        name=form.name.data
+        manufacturer = form.manufacturer.data
         try:
-            db.session.add(product)
-            db.session.commit()
+            conn = engine.connect()
+            conn.execute("INSERT INTO products(name,manufacturer) VALUES (1, 'john')")  # autocommits
+            #db.engine.execute("INSERT INTO products(name,manufacturer) VALUES(?,?)",name, manufacturer)
             flash('You have successfully added a product.')
         except:
+            print("yess")
             flash('Error: .')
-        return redirect(url_for('/'))
 
-    return render_template('user/note.html', form=form, title='Add Product') #add_role=add_note,
+        return redirect(url_for('user.add_products'))
+    # else:
+    #     return redirect(url_for('user.add_products'))
+
+    return render_template('user/note.html', form=form, title='Add Product')
 
 
 # @user.route('/viewprofile', methods=['GET', 'POST'])
@@ -61,7 +68,7 @@ def add_note():
 #         flash('You have successfully edited the note.')
 #
 #         # redirect to the roles page
-#         return redirect(url_for('user.list_notes'))
+#         return redirect(url_for('products'))
 #
 #     form.body.data = note.body
 #     form.title.data = note.title
@@ -79,6 +86,6 @@ def add_note():
 #     flash('You have successfully deleted the role.')
 #
 #     # redirect to the roles page
-#     return redirect(url_for('user.list_notes'))
+#     return redirect(url_for('products'))
 #
 #     return render_template(title="Delete Note")
