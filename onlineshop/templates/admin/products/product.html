@@ -1,20 +1,19 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
-{% block title %}View Profile{% endblock %}
+{% block title %}
 {% block body %}
 <div class="content-section">
  <div class="outer">
     <div class="middle">
       <div class="inner">
         <div class="center">
-            <h1> Welcome User!</h1>
-            <div class="center">
-            <br/>
-            </div>
+            <form name="connect" method="post" action="{{ url_for('admin.admin_products') }}">
+              {{ form.csrf_token }}
+              {{ wtf.quick_form(form) }}
+          </form>
         </div>
       </div>
     </div>
   </div>
 </div>
 {% endblock %}
-

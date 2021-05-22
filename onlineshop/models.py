@@ -1,7 +1,7 @@
 
 #http://docs.sqlalchemy.org/en/latest/core/type_basics.html#generic-types
 
-from flask_login import UserMixin
+#from flask_login import UserMixin
 
 from onlineshop import db
 
@@ -27,6 +27,8 @@ class Contract(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     card_info = db.Column(db.Integer)
     bill_number = db.Column(db.String(60), index=True, unique=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('customers.id'), nullable=True)
+
 
     def __init__(self, name):
         self.name = name
@@ -48,14 +50,14 @@ class Manufacturer(db.Model):
     def __repr__(self):
         return '<Manufacturer: {0}\n{1}>'.format(self.name)
 
-class Customer(UserMixin, db.Model):
+class Customer(db.Model): #UserMixin, 
 
     __tablename__ = 'customers'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), index=True, unique=True)
     type = db.Column(db.String(60))
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=True)
 
 
     def __repr__(self):
@@ -69,6 +71,7 @@ class Delivery(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), index=True, unique=True)
     tracking_number = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('customers.id'), nullable=True)
 
 
     def __init__(self, name):

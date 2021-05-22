@@ -1,56 +1,16 @@
-from flask import flash, redirect, render_template, url_for, request
-from flask_login import login_required, current_user
-
+from flask import redirect, render_template, url_for
 from . import user
-from .forms import ProductForm
 from .. import db
-from ..models import Product
 
 
+@user.route('/')
+def home():
+    return render_template('user/user.html', user='products')
 
 @user.route('/products')
 def products():
-
     products = db.engine.execute("SELECT pr.name 'name', mn.name 'manufacturer' FROM products pr LEFT JOIN manufacturers mn ON pr.manufacturer_id = mn.id")
     return render_template('user/products.html', products=products)
-
-@user.route('/products/add', methods=['GET', 'POST'])
-def add_products():
-    print("yes bna00")
-    form = ProductForm()
-    print("yes bna0")
-    if form.validate_on_submit():
-        try:
-            print("yes bna")
-            new_product = Product(name=form.name.data,manufacturer = form.manufacturer.data)  # Create an instance of the User class
-            print("yes bna1")
-            db.session.add(new_product)  # Adds new User record to database
-            print("yes bna3")
-            db.session.commit()  # Commits all changes
-            
-            redirect(url_for('user.add_products'))
-            #conn = engine.connect()
-            #conn.execute("INSERT INTO products(name,manufacturer) VALUES (1, 'john')")  # autocommits  %s,%s
-            #db.engine.execute("INSERT INTO products(name,manufacturer) VALUES (%s,%s)") #, (name, manufacturer)
-            #print(name,manufacturer)
-            #insert_stmt = ("INSERT INTO products(name,manufacturer) VALUES (%s,%s)")
-            #if db.engine.execute("INSERT INTO products(name,manufacturer) VALUES (%s,%s)",(name, manufacturer)):
-                
-            #data = (name,manufacturer)
-            #cursor.execute(insert_stmt, data)
-
-
-            #db.engine.execute("INSERT INTO products(name,manufacturer) VALUES(?,?)",name, manufacturer)
-            flash('You have successfully added a product.')
-        except:
-            print("yess")
-            flash('Error: .')
-
-        return redirect(url_for('user.add_products'))
-    # else:
-    #     return redirect(url_for('user.add_products'))
-
-    return render_template('user/note.html', form=form, title='Add Product')
 
 
 # @user.route('/viewprofile', methods=['GET', 'POST'])
