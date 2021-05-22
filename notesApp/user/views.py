@@ -1,16 +1,10 @@
-from flask import flash, redirect, render_template, url_for, request
-from flask_login import login_required, current_user
-
+from flask import redirect, render_template, url_for
 from . import user
 from .forms import ProductForm
 from .. import db
-from ..models import Product
-
-
 
 @user.route('/products')
 def products():
-
     products = db.engine.execute("SELECT pr.name 'name', mn.name 'manufacturer' FROM products pr LEFT JOIN manufacturers mn ON pr.manufacturer_id = mn.id")
     return render_template('user/products.html', products=products)
 
@@ -18,21 +12,11 @@ def products():
 def add_products():
     form = ProductForm()
     if form.validate_on_submit():
-        name=form.name.data
-        manufacturer = form.manufacturer.data
-        try:
-            conn = engine.connect()
-            conn.execute("INSERT INTO products(name,manufacturer) VALUES (1, 'john')")  # autocommits
-            #db.engine.execute("INSERT INTO products(name,manufacturer) VALUES(?,?)",name, manufacturer)
-            flash('You have successfully added a product.')
-        except:
-            print("yess")
-            flash('Error: .')
-
+        try: 
+            db.engine.execute("INSERT INTO products(name,manufacturer_id) VALUES(%s, %s)",(str(form.name.data), int(form.manufacturer.data)))
+        except Exception as error:
+            pass
         return redirect(url_for('user.add_products'))
-    # else:
-    #     return redirect(url_for('user.add_products'))
-
     return render_template('user/note.html', form=form, title='Add Product')
 
 

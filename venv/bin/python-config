@@ -1,4 +1,4 @@
-#!home.homepage/felex/Desktop/tasks/python/flask-task/venv/bin/python
+#!/home/felex/Desktop/tasks/python/flask-task/venv/bin/python
 
 import sys
 import getopt

@@ -1,0 +1,108 @@
+from flask import flash, redirect, render_template, url_for, request
+from flask_login import login_required, current_user
+
+from . import user
+from .forms import ProductForm
+from .. import db
+from ..models import Product
+
+
+
+@user.route('/products')
+def products():
+
+    products = db.engine.execute("SELECT pr.name 'name', mn.name 'manufacturer' FROM products pr LEFT JOIN manufacturers mn ON pr.manufacturer_id = mn.id")
+    return render_template('user/products.html', products=products)
+
+@user.route('/products/add', methods=['GET', 'POST'])
+def add_products():
+    print("yes bna00")
+    form = ProductForm()
+    print("yes bna0")
+    if form.validate_on_submit():
+        try:
+            print("yes bna")
+            new_product = Product(name=form.name.data,manufacturer = form.manufacturer.data)  # Create an instance of the User class
+            print("yes bna1")
+            db.session.add(new_product)  # Adds new User record to database
+            print("yes bna3")
+            db.session.commit()  # Commits all changes
+            
+            redirect(url_for('user.add_products'))
+            #conn = engine.connect()
+            #conn.execute("INSERT INTO products(name,manufacturer) VALUES (1, 'john')")  # autocommits  %s,%s
+            #db.engine.execute("INSERT INTO products(name,manufacturer) VALUES (%s,%s)") #, (name, manufacturer)
+            #print(name,manufacturer)
+            #insert_stmt = ("INSERT INTO products(name,manufacturer) VALUES (%s,%s)")
+            #if db.engine.execute("INSERT INTO products(name,manufacturer) VALUES (%s,%s)",(name, manufacturer)):
+                
+            #data = (name,manufacturer)
+            #cursor.execute(insert_stmt, data)
+
+
+            #db.engine.execute("INSERT INTO products(name,manufacturer) VALUES(?,?)",name, manufacturer)
+            flash('You have successfully added a product.')
+        except:
+            print("yess")
+            flash('Error: .')
+
+        return redirect(url_for('user.add_products'))
+    # else:
+    #     return redirect(url_for('user.add_products'))
+
+    return render_template('user/note.html', form=form, title='Add Product')
+
+
+# @user.route('/viewprofile', methods=['GET', 'POST'])
+# def viewprofile():
+#     """
+#     Handle requests to the /register route
+#     Add an notetaker to the database through the registration form
+#     """
+#     user = current_user
+#     form=UserUpdateForm(obj=user)
+#     form.populate_obj(user)
+#     if form.validate_on_submit():
+#
+#         form.populate_obj(user)
+#
+#         db.session.commit()
+#
+#         flash('You have successfully edited your profile!')
+#     return render_template('user/user.html', title="View Profile", user=user, form=form, action='Edit')
+
+
+# @user.route('/notes/edit/<int:id>', methods=['GET', 'POST'])
+# def edit_note(id):
+#     add_note = False
+#     note = Note.query.get_or_404(id)
+#     form = NoteForm(obj=note)
+#     if form.validate_on_submit():
+#         note.title = form.title.data
+#         note.body = form.body.data
+#         db.session.add(note)
+#         db.session.commit()
+#         flash('You have successfully edited the note.')
+#
+#         # redirect to the roles page
+#         return redirect(url_for('products'))
+#
+#     form.body.data = note.body
+#     form.title.data = note.title
+#     return render_template('user/note.html', add_role=add_note,form=form, title="Edit Note")
+
+# @user.route('/notes/delete/<int:id>', methods=['GET', 'POST'])
+# def delete_note(id):
+#     """
+#     Delete a role from the database
+#     """
+#
+#     note = Note.query.get_or_404(id)
+#     db.session.delete(note)
+#     db.session.commit()
+#     flash('You have successfully deleted the role.')
+#
+#     # redirect to the roles page
+#     return redirect(url_for('products'))
+#
+#     return render_template(title="Delete Note")
